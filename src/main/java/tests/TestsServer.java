@@ -53,7 +53,7 @@ public class TestsServer {
     }
 
     static class TestsImpl extends GreeterGrpc.GreeterImplBase {
-        public void emptyArgsEmptyReturn(StreamObserver<Empty> responseObserver) {
+        public void emptyArgsEmptyReturn(Empty req, StreamObserver<Empty> responseObserver) {
             responseObserver.onNext(null);
             responseObserver.onCompleted();
         }
@@ -66,9 +66,7 @@ public class TestsServer {
         }
 
         public void multiLongArgsLongReturn(MultiLong req, StreamObserver<Long> responseObserver) {
-            MultiLong reply = MultiLong.newBuilder().build();
-
-            responseObserver.onNext(reply.getNumber1());
+            responseObserver.onNext(req.getNumber1());
             responseObserver.onCompleted();
         }
 

@@ -17,14 +17,14 @@ service Greeter {
 message Empty {}
 
 message MultiLong {
-  int64 number1 = 1;
-  int64 number2 = 2;
-  int64 number3 = 3;
-  int64 number4 = 4;
-  int64 number5 = 5;
-  int64 number6 = 6;
-  int64 number7 = 7;
-  int64 number8 = 8;
+  Long number1 = 1;
+  Long number2 = 2;
+  Long number3 = 3;
+  Long number4 = 4;
+  Long number5 = 5;
+  Long number6 = 6;
+  Long number7 = 7;
+  Long number8 = 8;
 }
 
 message Long {

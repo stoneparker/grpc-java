@@ -15,8 +15,7 @@ public class TestsClient {
     }
 
     public void emptyArgsEmptyReturn() {
-        Empty empty = new Empty();
-        Empty response = blockingStub.emptyArgsEmptyReturn(empty);
+        Empty response = blockingStub.emptyArgsEmptyReturn(null);
         logger.info("stringArgsStringReturn: " + response);
     }
 
