@@ -79,7 +79,6 @@
             <groupId>io.grpc</groupId>
             <artifactId>grpc-testing</artifactId>
             <version>1.54.1</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
