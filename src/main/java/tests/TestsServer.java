@@ -66,7 +66,9 @@ public class TestsServer {
         }
 
         public void multiLongArgsLongReturn(MultiLong req, StreamObserver<Long> responseObserver) {
-            responseObserver.onNext(req.getNumber1());
+            Long reply = Long.newBuilder().setNumber(req.getNumber(1)).build();
+
+            responseObserver.onNext(reply);
             responseObserver.onCompleted();
         }
 

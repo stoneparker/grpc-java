@@ -2,6 +2,7 @@ package tests;
 
 import io.grpc.*;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
@@ -26,21 +27,12 @@ public class TestsClient {
     }
 
     public void multiLongArgsLongReturn() {
-        /*
-         * @TODO: fazer funcionar :)
         MultiLong request = MultiLong.newBuilder()
-                .setNumber1(1)
-                .setNumber2(2)
-                .setNumber3(3)
-                .setNumber4(4)
-                .setNumber5(5)
-                .setNumber6(6)
-                .setNumber7(7)
-                .setNumber8(8)
+                .addAllNumber(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L))
                 .build();
+
         Long response = blockingStub.multiLongArgsLongReturn(request);
-        logger.info("longArgsLongReturn: " + response);
-         */
+        logger.info("multiLongArgsLongReturn: " + response);
     }
 
     public void stringArgsStringReturn() {

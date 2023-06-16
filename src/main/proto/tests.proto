@@ -17,14 +17,7 @@ service Greeter {
 message Empty {}
 
 message MultiLong {
-  Long number1 = 1;
-  Long number2 = 2;
-  Long number3 = 3;
-  Long number4 = 4;
-  Long number5 = 5;
-  Long number6 = 6;
-  Long number7 = 7;
-  Long number8 = 8;
+  repeated int64 number = 1;
 }
 
 message Long {
