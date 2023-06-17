@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-public class TestsServer {
-    private static final Logger logger = Logger.getLogger(TestsServer.class.getName());
+public class Server {
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
 
     private static io.grpc.Server server;
 
@@ -25,7 +25,7 @@ public class TestsServer {
             public void run() {
                 System.err.println("*** shutting down gRPC server since JVM is shutting down");
                 try {
-                    TestsServer.this.stop();
+                    Server.this.stop();
                 } catch (InterruptedException e) {
                     e.printStackTrace(System.err);
                 }
@@ -47,9 +47,9 @@ public class TestsServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        final TestsServer testsServer = new TestsServer();
-        testsServer.start();
-        testsServer.blockUntilShutdown();
+        final Server server = new Server();
+        server.start();
+        server.blockUntilShutdown();
     }
 
     static class TestsImpl extends TestsGrpc.TestsImplBase {

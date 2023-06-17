@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-interface iTestsClient {
+interface iClient {
     @ExecutionTime
     void emptyArgsEmptyReturn();
     @ExecutionTime
@@ -18,13 +18,13 @@ interface iTestsClient {
     void stringArgsStringReturn();
 }
 
-public class TestsClient extends ExecutionTimeDecorator implements iTestsClient {
-    private static final Logger logger = Logger.getLogger(TestsClient.class.getName());
+public class Client extends ExecutionTimeDecorator implements iClient {
+    private static final Logger logger = Logger.getLogger(Client.class.getName());
 
     private final tests.TestsGrpc.TestsBlockingStub blockingStub;
 
-    public TestsClient(Channel channel) {
-        super(TestsClient.class);
+    public Client(Channel channel) {
+        super(Client.class);
         blockingStub = TestsGrpc.newBlockingStub(channel);
     }
 
@@ -66,12 +66,12 @@ public class TestsClient extends ExecutionTimeDecorator implements iTestsClient 
         ManagedChannel channel = Grpc.newChannelBuilder(target, InsecureChannelCredentials.create()).build();
 
         try {
-            TestsClient client = new TestsClient(channel);
+            Client client = new Client(channel);
             ExecutionTimeDecorator decorator = new ExecutionTimeDecorator(client);
 
-            iTestsClient proxy = (iTestsClient) Proxy.newProxyInstance(
-                TestsClient.class.getClassLoader(),
-                new Class<?>[] { iTestsClient.class },
+            iClient proxy = (iClient) Proxy.newProxyInstance(
+                Client.class.getClassLoader(),
+                new Class<?>[] { iClient.class },
                 decorator
             );
 
