@@ -7,7 +7,7 @@ option objc_class_prefix = "TP";
 
 package tests;
 
-service Greeter {
+service Tests {
   rpc EmptyArgsEmptyReturn (Empty) returns (Empty) {}
   rpc LongArgsLongReturn (Long) returns (Long) {}
   rpc MultiLongArgsLongReturn (MultiLong) returns (Long) {}

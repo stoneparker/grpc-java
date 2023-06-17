@@ -2,15 +2,12 @@ package tests;
 
 import io.grpc.*;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-interface TargetInterface {
+interface iTestsClient {
     @ExecutionTime
     void emptyArgsEmptyReturn();
     @ExecutionTime
@@ -21,14 +18,14 @@ interface TargetInterface {
     void stringArgsStringReturn();
 }
 
-public class TestsClient extends ExecutionTimeDecorator implements TargetInterface {
+public class TestsClient extends ExecutionTimeDecorator implements iTestsClient {
     private static final Logger logger = Logger.getLogger(TestsClient.class.getName());
 
-    private final tests.GreeterGrpc.GreeterBlockingStub blockingStub;
+    private final tests.TestsGrpc.TestsBlockingStub blockingStub;
 
     public TestsClient(Channel channel) {
         super(TestsClient.class);
-        blockingStub = GreeterGrpc.newBlockingStub(channel);
+        blockingStub = TestsGrpc.newBlockingStub(channel);
     }
 
     @ExecutionTime
@@ -66,17 +63,15 @@ public class TestsClient extends ExecutionTimeDecorator implements TargetInterfa
 
     public static void main(java.lang.String[] args) throws Exception {
         java.lang.String target = "localhost:50051";
-
         ManagedChannel channel = Grpc.newChannelBuilder(target, InsecureChannelCredentials.create()).build();
 
         try {
             TestsClient client = new TestsClient(channel);
-
             ExecutionTimeDecorator decorator = new ExecutionTimeDecorator(client);
 
-            TargetInterface proxy = (TargetInterface) Proxy.newProxyInstance(
+            iTestsClient proxy = (iTestsClient) Proxy.newProxyInstance(
                 TestsClient.class.getClassLoader(),
-                new Class<?>[] { TargetInterface.class },
+                new Class<?>[] { iTestsClient.class },
                 decorator
             );
 
@@ -87,33 +82,5 @@ public class TestsClient extends ExecutionTimeDecorator implements TargetInterfa
         } finally {
             channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
         }
-    }
-}
-
-class ExecutionTimeDecorator implements InvocationHandler {
-    private Object target;
-
-    ExecutionTimeDecorator(Object target) {
-        this.target = target;
-    }
-
-    @Override
-    @ExecutionTime
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if (method.isAnnotationPresent(ExecutionTime.class)) {
-            long startTime = System.nanoTime();
-
-            try {
-                Object result = method.invoke(target, args);
-                return result;
-            } finally {
-                long endTime = System.nanoTime();
-                long executionTime = endTime - startTime;
-
-                System.out.println(new Date() + " - Execution time: " + executionTime + " nanoseconds");
-            }
-        }
-
-        return null;
     }
 }

@@ -52,7 +52,7 @@ public class TestsServer {
         testsServer.blockUntilShutdown();
     }
 
-    static class TestsImpl extends GreeterGrpc.GreeterImplBase {
+    static class TestsImpl extends TestsGrpc.TestsImplBase {
         public void emptyArgsEmptyReturn(Empty req, StreamObserver<Empty> responseObserver) {
             responseObserver.onNext(null);
             responseObserver.onCompleted();
