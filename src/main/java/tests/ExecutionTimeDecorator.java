@@ -12,7 +12,6 @@ public class ExecutionTimeDecorator implements InvocationHandler {
     }
 
     @Override
-    @ExecutionTime
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.isAnnotationPresent(ExecutionTime.class)) {
             long startTime = System.nanoTime();
