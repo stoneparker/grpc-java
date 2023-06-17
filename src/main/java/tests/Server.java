@@ -1,5 +1,8 @@
 package tests;
 
+import com.google.protobuf.Any;
+import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
 import io.grpc.Grpc;
 import io.grpc.InsecureServerCredentials;
 import io.grpc.stub.StreamObserver;
@@ -54,14 +57,14 @@ public class Server {
 
     static class ServerImpl extends TestsGrpc.TestsImplBase {
         public void emptyArgsEmptyReturn(Empty req, StreamObserver<Empty> responseObserver) {
-            System.out.println("Client called emptyArgsEmptyReturn");
+            System.out.println("emptyArgsEmptyReturn");
 
             responseObserver.onNext(null);
             responseObserver.onCompleted();
         }
 
         public void longArgsLongReturn(Long req, StreamObserver<Long> responseObserver) {
-            System.out.println("Client called longArgsLongReturn");
+            System.out.println("longArgsLongReturn: " + req.getNumber());
 
             Long reply = Long.newBuilder().setNumber(req.getNumber()).build();
 
@@ -70,7 +73,7 @@ public class Server {
         }
 
         public void multiLongArgsLongReturn(MultiLong req, StreamObserver<Long> responseObserver) {
-            System.out.println("Client called multiLongArgsLongReturn");
+            System.out.println("multiLongArgsLongReturn: " + req.getNumberList());
 
             Long reply = Long.newBuilder().setNumber(req.getNumber(1)).build();
 
@@ -79,9 +82,22 @@ public class Server {
         }
 
         public void stringArgsStringReturn(StringMessage req, StreamObserver<StringMessage> responseObserver) {
-            System.out.println("Client called stringArgsStringReturn");
+            System.out.println("stringArgsStringReturn: " + req.getMessage());
 
             StringMessage reply = StringMessage.newBuilder().setMessage(req.getMessage()).build();
+
+            responseObserver.onNext(reply);
+            responseObserver.onCompleted();
+        }
+
+        public void complexArgsComplexReturn(ObjectMessage req, StreamObserver<ObjectMessage> responseObserver) throws InvalidProtocolBufferException {
+            Any packedObject = req.getObject();
+            ByteString serializedObject = packedObject.getValue();
+            SimpleClass simpleObject = SimpleClass.PARSER.parseFrom(serializedObject);
+
+            System.out.println("complexArgsComplexReturn with SimpleClass instance as args: " + simpleObject.var);
+
+            ObjectMessage reply = ObjectMessage.newBuilder().setObject(packedObject).build();
 
             responseObserver.onNext(reply);
             responseObserver.onCompleted();

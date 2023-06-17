@@ -1,8 +1,10 @@
 package tests;
 
+import com.google.protobuf.*;
 import io.grpc.*;
 
 import java.lang.reflect.Proxy;
+import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
@@ -16,6 +18,9 @@ interface iClient {
     void multiLongArgsLongReturn();
     @ExecutionTime
     void stringArgsStringReturn();
+
+    @ExecutionTime
+    void complexArgsComplexReturn() throws InvalidProtocolBufferException;
 }
 
 public class Client extends ExecutionTimeDecorator implements iClient {
@@ -61,7 +66,24 @@ public class Client extends ExecutionTimeDecorator implements iClient {
         logger.info("stringArgsStringReturn: " + response);
     }
 
-    public static void main(java.lang.String[] args) throws Exception {
+    @ExecutionTime
+    public void complexArgsComplexReturn() {
+        SimpleClass simpleObject = new SimpleClass();
+
+        String name = simpleObject.getClass().getSimpleName();
+        String packageName = simpleObject.getClass().getPackage().getName();
+        String fullName = packageName + '.'+ name;
+        String typeURL = "type.googleapis.com" + "/" + fullName;
+
+        Any packedObject = Any.newBuilder().setValue(simpleObject.toByteString()).setTypeUrl(typeURL).build();
+
+        ObjectMessage request = ObjectMessage.newBuilder().setObject(packedObject).build();
+        ObjectMessage response = blockingStub.complexArgsComplexReturn(request);
+
+        logger.info("complexArgsComplexReturn: " + response.getObject().getValue());
+    }
+
+    public static void main(java.lang.String[] args) throws Exception, RuntimeException, StatusRuntimeException, InvalidProtocolBufferException, UndeclaredThrowableException {
         String server = "localhost:50051";
         ManagedChannel channel = Grpc.newChannelBuilder(server, InsecureChannelCredentials.create()).build();
 
@@ -79,8 +101,10 @@ public class Client extends ExecutionTimeDecorator implements iClient {
             proxy.longArgsLongReturn();
             proxy.multiLongArgsLongReturn();
             proxy.stringArgsStringReturn();
+            proxy.complexArgsComplexReturn();
         } finally {
             channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
         }
     }
 }
+

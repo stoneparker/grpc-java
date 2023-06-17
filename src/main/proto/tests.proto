@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/any.proto";
+
 option java_multiple_files = true;
 option java_package = "tests";
 option java_outer_classname = "TestsProto";
@@ -12,6 +14,7 @@ service Tests {
   rpc LongArgsLongReturn (Long) returns (Long) {}
   rpc MultiLongArgsLongReturn (MultiLong) returns (Long) {}
   rpc StringArgsStringReturn (StringMessage) returns (StringMessage) {}
+  rpc ComplexArgsComplexReturn (ObjectMessage) returns (ObjectMessage) {}
 }
 
 message Empty {}
@@ -26,4 +29,9 @@ message Long {
 
 message StringMessage {
   string message = 1;
+}
+
+
+message ObjectMessage {
+  google.protobuf.Any object = 1;
 }
