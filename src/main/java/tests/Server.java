@@ -54,11 +54,15 @@ public class Server {
 
     static class ServerImpl extends TestsGrpc.TestsImplBase {
         public void emptyArgsEmptyReturn(Empty req, StreamObserver<Empty> responseObserver) {
+            System.out.println("Client called emptyArgsEmptyReturn");
+
             responseObserver.onNext(null);
             responseObserver.onCompleted();
         }
 
         public void longArgsLongReturn(Long req, StreamObserver<Long> responseObserver) {
+            System.out.println("Client called longArgsLongReturn");
+
             Long reply = Long.newBuilder().setNumber(req.getNumber()).build();
 
             responseObserver.onNext(reply);
@@ -66,6 +70,8 @@ public class Server {
         }
 
         public void multiLongArgsLongReturn(MultiLong req, StreamObserver<Long> responseObserver) {
+            System.out.println("Client called multiLongArgsLongReturn");
+
             Long reply = Long.newBuilder().setNumber(req.getNumber(1)).build();
 
             responseObserver.onNext(reply);
@@ -73,6 +79,8 @@ public class Server {
         }
 
         public void stringArgsStringReturn(StringMessage req, StreamObserver<StringMessage> responseObserver) {
+            System.out.println("Client called stringArgsStringReturn");
+
             StringMessage reply = StringMessage.newBuilder().setMessage(req.getMessage()).build();
 
             responseObserver.onNext(reply);

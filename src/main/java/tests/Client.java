@@ -62,8 +62,8 @@ public class Client extends ExecutionTimeDecorator implements iClient {
     }
 
     public static void main(java.lang.String[] args) throws Exception {
-        java.lang.String target = "localhost:50051";
-        ManagedChannel channel = Grpc.newChannelBuilder(target, InsecureChannelCredentials.create()).build();
+        String server = "localhost:50051";
+        ManagedChannel channel = Grpc.newChannelBuilder(server, InsecureChannelCredentials.create()).build();
 
         try {
             Client client = new Client(channel);
