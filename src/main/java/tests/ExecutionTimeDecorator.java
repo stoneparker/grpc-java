@@ -14,16 +14,16 @@ public class ExecutionTimeDecorator implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         if (method.isAnnotationPresent(ExecutionTime.class)) {
-            long startTime = System.nanoTime();
+            long startTime = System.currentTimeMillis();
 
             try {
                 Object result = method.invoke(target, args);
                 return result;
             } finally {
-                long endTime = System.nanoTime();
+                long endTime = System.currentTimeMillis();
                 long executionTime = endTime - startTime;
 
-                System.out.println(new Date() + " - Execution time of " + method.getName() + ": " + executionTime + " nanoseconds");
+                System.out.println(new Date() + " - Execution time of " + method.getName() + ": " + executionTime + " milliseconds");
             }
         }
 

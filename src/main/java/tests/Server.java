@@ -16,7 +16,7 @@ public class Server {
     private void start() throws IOException {
         int port = 50051;
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
-                .addService(new TestsImpl())
+                .addService(new ServerImpl())
                 .build()
                 .start();
         logger.info("Server started, listening on " + port);
@@ -52,7 +52,7 @@ public class Server {
         server.blockUntilShutdown();
     }
 
-    static class TestsImpl extends TestsGrpc.TestsImplBase {
+    static class ServerImpl extends TestsGrpc.TestsImplBase {
         public void emptyArgsEmptyReturn(Empty req, StreamObserver<Empty> responseObserver) {
             responseObserver.onNext(null);
             responseObserver.onCompleted();
