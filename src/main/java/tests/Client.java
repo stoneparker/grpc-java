@@ -97,11 +97,15 @@ public class Client extends ExecutionTimeDecorator implements iClient {
                 decorator
             );
 
-            proxy.emptyArgsEmptyReturn();
-            proxy.longArgsLongReturn();
-            proxy.multiLongArgsLongReturn();
-            proxy.stringArgsStringReturn();
-            proxy.complexArgsComplexReturn();
+            for (int i = 0; i <= 10; i++) {
+                proxy.emptyArgsEmptyReturn();
+                proxy.longArgsLongReturn();
+                proxy.multiLongArgsLongReturn();
+                proxy.stringArgsStringReturn();
+                proxy.complexArgsComplexReturn();
+            }
+
+            System.out.println(ExecutionTimeDecorator.map);
         } finally {
             channel.shutdownNow().awaitTermination(5, TimeUnit.SECONDS);
         }
