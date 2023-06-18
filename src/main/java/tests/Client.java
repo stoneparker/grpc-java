@@ -36,14 +36,14 @@ public class Client extends ExecutionTimeDecorator implements iClient {
     @ExecutionTime
     public void emptyArgsEmptyReturn() {
         Empty response = blockingStub.emptyArgsEmptyReturn(null);
-        logger.info("emptyArgsStringReturn: " + response);
+        System.out.println("emptyArgsStringReturn: " + response);
     }
 
     @ExecutionTime
     public void longArgsLongReturn() {
         Long request = Long.newBuilder().setNumber(1L).build();
         Long response = blockingStub.longArgsLongReturn(request);
-        logger.info("longArgsLongReturn: " + response);
+        System.out.println("longArgsLongReturn: " + response);
     }
 
     @ExecutionTime
@@ -53,7 +53,7 @@ public class Client extends ExecutionTimeDecorator implements iClient {
                 .build();
 
         Long response = blockingStub.multiLongArgsLongReturn(request);
-        logger.info("multiLongArgsLongReturn: " + response);
+        System.out.println("multiLongArgsLongReturn: " + response);
     }
 
     @ExecutionTime
@@ -63,7 +63,7 @@ public class Client extends ExecutionTimeDecorator implements iClient {
         * */
         StringMessage request = StringMessage.newBuilder().setMessage("oi").build();
         StringMessage response = blockingStub.stringArgsStringReturn(request);
-        logger.info("stringArgsStringReturn: " + response);
+        System.out.println("stringArgsStringReturn: " + response);
     }
 
     @ExecutionTime
@@ -80,7 +80,7 @@ public class Client extends ExecutionTimeDecorator implements iClient {
         ObjectMessage request = ObjectMessage.newBuilder().setObject(packedObject).build();
         ObjectMessage response = blockingStub.complexArgsComplexReturn(request);
 
-        logger.info("complexArgsComplexReturn: " + response.getObject().getValue());
+        System.out.println("complexArgsComplexReturn: " + response.getObject().getValue());
     }
 
     public static void main(java.lang.String[] args) throws Exception, RuntimeException, StatusRuntimeException, InvalidProtocolBufferException, UndeclaredThrowableException {
@@ -97,7 +97,7 @@ public class Client extends ExecutionTimeDecorator implements iClient {
                 decorator
             );
 
-            for (int i = 0; i <= 10; i++) {
+            for (int i = 0; i < 10; i++) {
                 proxy.emptyArgsEmptyReturn();
                 proxy.longArgsLongReturn();
                 proxy.multiLongArgsLongReturn();
