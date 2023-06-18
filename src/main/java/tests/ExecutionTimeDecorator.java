@@ -1,5 +1,7 @@
 package tests;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -12,7 +14,7 @@ public class ExecutionTimeDecorator implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable, InvalidProtocolBufferException {
         if (method.isAnnotationPresent(ExecutionTime.class)) {
             long startTime = System.currentTimeMillis();
 

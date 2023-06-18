@@ -3,8 +3,7 @@ package tests;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
-import io.grpc.Grpc;
-import io.grpc.InsecureServerCredentials;
+import io.grpc.*;
 import io.grpc.stub.StreamObserver;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class Server {
 
     private static io.grpc.Server server;
 
-    private void start() throws IOException {
+    private void start() throws IOException, InvalidProtocolBufferException {
         int port = 50051;
         server = Grpc.newServerBuilderForPort(port, InsecureServerCredentials.create())
                 .addService(new ServerImpl())
@@ -90,17 +89,24 @@ public class Server {
             responseObserver.onCompleted();
         }
 
-        public void complexArgsComplexReturn(ObjectMessage req, StreamObserver<ObjectMessage> responseObserver) throws InvalidProtocolBufferException {
-            Any packedObject = req.getObject();
-            ByteString serializedObject = packedObject.getValue();
-            SimpleClass simpleObject = SimpleClass.PARSER.parseFrom(serializedObject);
+        public void complexArgsComplexReturn(ObjectMessage req, StreamObserver<ObjectMessage> responseObserver) {
+            try {
+                Any packedObject = req.getObject();
+                ByteString serializedObject = packedObject.getValue();
+                SimpleClass simpleObject = SimpleClass.PARSER.parseFrom(serializedObject);
 
-            System.out.println("complexArgsComplexReturn with SimpleClass instance as args: " + simpleObject.var);
+                System.out.println("complexArgsComplexReturn with SimpleClass instance as args: " + simpleObject.var);
 
-            ObjectMessage reply = ObjectMessage.newBuilder().setObject(packedObject).build();
+                ObjectMessage reply = ObjectMessage.newBuilder().setObject(packedObject).build();
 
-            responseObserver.onNext(reply);
-            responseObserver.onCompleted();
+                responseObserver.onNext(reply);
+                responseObserver.onCompleted();
+
+            } catch (InvalidProtocolBufferException e) {
+                Status status = Status.INVALID_ARGUMENT.withDescription("Invalid protobuf message").withCause(e);
+                responseObserver.onError(status.asRuntimeException());
+            }
         }
     }
+
 }
