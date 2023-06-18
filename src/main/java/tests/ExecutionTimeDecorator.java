@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class ExecutionTimeDecorator implements InvocationHandler {
     private Object target;
-    public static Map<String, String> map = new HashMap<String, String>();
+    public static Map<String, String> map = new HashMap<>();
 
     ExecutionTimeDecorator(Object target) {
         this.target = target;
